@@ -3,23 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Recursive&display=swap" rel="stylesheet">  
     <link rel="stylesheet" href="styles.css">
     <title>Tic Tac Toe</title>
 </head>
 <body>
     <div class="container">
         <header>
-            <h2>Tic Tac Toe!</h2>
-            <p>Press the button to start.</p>
+            <h1>Tic Tac Toe</h1>
+            <p>Made By Ben Rosenthal For The Odin Project.</p>
         </header>
-        <button id="start-btn">Start Game</button>
         <div id="name-form">
-            <input type="text" placeholder="Player X:" id="x-name">
-            <input type="text" placeholder="Player O:" id="o-name">
+            <input type="text" placeholder="Player X" id="x-name">
+            <input type="text" placeholder="Player O" id="o-name">
             <button id="confirm-names">Confirm</button>
         </div>
 
-        <div id="turn"><span id="turn-display"></span>'s turn</div>
+        <div id="above-board">
+            <div id="turn"><span id="turn-display"></span></div>
+            <button id="replay">Replay</button>
+        </div>
+        
         <div id="board">
             <div class="board-square" id="0"></div>
             <div class="board-square" id="1"></div>
