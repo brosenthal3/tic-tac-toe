@@ -4,6 +4,8 @@ const gameBoard = (function(){
     const modifyBoard = (index) => {
         if(board[index] == ''){
             board[index] = current;
+        } else {
+            return;
         }
         current = _toggleCurrent();
         
@@ -48,7 +50,7 @@ const gameBoard = (function(){
             board[2] == 'O' && board[4] == 'O' && board[6] == 'O'
         ){
             return 'O';
-        } else if(board.indexOf('') > 0){
+        } else if(board.indexOf('') >= 0){
             return false;
         } else{
             return 'Tie';
