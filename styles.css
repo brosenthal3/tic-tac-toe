@@ -1,16 +1,21 @@
+:root{
+    --main-color:rgb(147, 202, 204);
+    --dark-color:rgb(41, 86, 88);
+    --shadow-color:rgba(0,0,0,0.07)
+}
 #board{
     width:300px;
     height:300px;
     display:flex;
     flex-wrap:wrap;
-    margin:auto;
     margin-top:1em;
-    border:1px solid black;
+    border:1px solid var(--dark-color);
     border-width: 1px 1px 0px 0px;
-    box-shadow: 1px 1px 10px 1px rgba(0,0,0,0.2);
+    box-shadow: 1px 1px 10px 1px var(--shadow-color);
+    margin:auto;
 }
 .board-square{
-    border:1px solid black;
+    border:1px solid var(--dark-color);
     width:99px;
     height:99px;
     font-size:50px;
@@ -20,6 +25,7 @@
     cursor:pointer;
     border-width: 0px 0px 1px 1px;
     background:rgb(244, 244, 244);
+    color:var(--dark-color);
 }
 #replay, #board, #turn{
     display:none;
@@ -28,18 +34,28 @@
     display:flex;
     justify-content: center;
     align-items:center;
+    margin-bottom:1em;
 }
 #replay, #turn{
     margin:auto .8em;
 }
-header{
-    margin-bottom:1.5em;
-    padding:1em;
-    background:rgb(170, 199, 221);
-    border-radius:10px;
-    box-shadow: 1px 1px 10px 1px rgba(0,0,0,0.2);
+#turn{
+    margin-left:0;
 }
-
+header{
+    border-radius:10px;
+    text-align:left;
+    margin:2.3em 0em 1em 0em;
+    text-align:center;
+}
+footer{
+    position:absolute;
+    top:0;
+    text-align:center;
+    background:var(--main-color);
+    width:100%;
+    font-size:13px;
+}
 body{
     font-family: 'Recursive', sans-serif;
     font-size:16px;
@@ -47,10 +63,11 @@ body{
     background:#f1f1f1;
 }
 h1, h2, h3, h4, h5{
-    margin:.5em;
+    margin:.5em 0em;
+    color:var(--dark-color);
 }
 a{
-    color:inherit;
+    color:var(--dark-color);
     text-decoration: none;
 }
 button, input{
@@ -58,11 +75,11 @@ button, input{
     padding:.5em 1em;
     font:inherit;
     border-radius:12px;
-    background:rgb(170, 199, 221);
-    box-shadow: 1px 1px 5px 1px rgba(0,0,0,0.1);
+    background:var(--main-color);
+    box-shadow: 1px 1px 2px 1px var(--shadow-color);
 }
 input{
-    border:1px solid rgba(0,0,0,0.2);
+    border:1px solid var(--shadow-color);
     background:rgba(0,0,0,0.05);
 }
 button:focus{
@@ -95,9 +112,28 @@ button:hover{
     input, button{
         margin-top:.6em;
     }
+    header{
+        margin-top:3em;
+    }
 }
-@media(max-width:400px){
+@media(max-width:450px){
     .container{
         width:100%;
+        padding:.2em;
+        overflow:hidden;
+    }
+    header{
+        margin-top:4em;
+        text-align:center;
+    }
+    #board{
+        margin:auto;
+    }
+    #above-board{
+        justify-content: center;
+        margin-bottom:1em;
+    }
+    footer{
+        padding:0;
     }
 }

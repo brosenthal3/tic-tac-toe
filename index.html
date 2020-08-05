@@ -8,10 +8,12 @@
     <title>Tic Tac Toe</title>
 </head>
 <body>
+    <footer>
+        <p>Made By Ben Rosenthal For The Odin Project. View my other projects on my <a href="https://ikbenben.com" target="_blank">Portfolio</a></p>
+    </footer>
     <div class="container">
         <header>
             <h1>Tic Tac Toe</h1>
-            <p>Made By Ben Rosenthal For The Odin Project.</p>
         </header>
         <div id="name-form">
             <input type="text" placeholder="Player X" id="x-name">
@@ -20,7 +22,7 @@
         </div>
 
         <div id="above-board">
-            <div id="turn"><span id="turn-display"></span></div>
+            <div id="turn"><span id="turn-display"></span><span id="winner-display"></span></div>
             <button id="replay">Replay</button>
         </div>
         
@@ -38,7 +40,6 @@
             <div class="board-square" id="8"></div>
         </div>
     </div>
-
     
 
     <script src="script.js"></script>

@@ -1,61 +1,72 @@
+//board module where everything concerning the board is handeled.
 const gameBoard = (function(){
     let board= ['', '', '', '', '', '', '', '', ''];
     let current = 'X';
+    const victoryCombs = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+
+    //resets the current player and board.
+    const resetData = () => {
+        current = 'X';
+        board = ['', '', '', '', '', '', '', '', ''];
+    }
+
+    //executes when a square on the board is clicked
     const modifyBoard = (index) => {
+        //if the square is empty, set it to the current player. else do nothing.
         if(board[index] == ''){
             board[index] = current;
         } else {
             return;
         }
-        current = _toggleCurrent();
-        
-        let winner = _determineWinner();
-        if(winner != false){
+        //check if there is a winner and if so, end the game.
+        let winner = _determineWinner(current);
+        if(winner.winner){
             _endGame(winner);
         } else {
-            return;
+            current = _toggleCurrent();
         }
     }
+    //method that changes the current player
     const _toggleCurrent = () => {
         return current == 'X' ? 'O' : 'X';
     }    
     const _endGame = (winner) => {
-        if(winner == 'Tie'){
-            displayController.endGame(`It's a tie!`);
+        if(winner.winner == 'Tie'){
+            displayController.endGame(`It's a tie!`, winner.winningCombo);
         } else {
-            let winnerPlayer = gameModule.findPlayer(winner);
-            displayController.endGame(`${winnerPlayer.name} is the winner!`);
+            let winnerPlayer = gameModule.findPlayer(winner.winner);
+            displayController.endGame(`${winnerPlayer.name} is the winner!`, winner.winningCombo);
         }
     }
-    const _determineWinner = () => {
-        if(
-            board[0] == 'X' && board[1] == 'X' && board[2] == 'X' ||
-            board[3] == 'X' && board[4] == 'X' && board[5] == 'X' || 
-            board[6] == 'X' && board[7] == 'X' && board[8] == 'X' ||
-            board[0] == 'X' && board[3] == 'X' && board[6] == 'X' ||
-            board[1] == 'X' && board[4] == 'X' && board[7] == 'X' ||
-            board[2] == 'X' && board[5] == 'X' && board[8] == 'X' ||
-            board[0] == 'X' && board[4] == 'X' && board[8] == 'X' ||
-            board[2] == 'X' && board[4] == 'X' && board[6] == 'X'
-        ){
-            return 'X';
-        } else if(
-            board[0] == 'O' && board[1] == 'O' && board[2] == 'O' ||
-            board[3] == 'O' && board[4] == 'O' && board[5] == 'O' || 
-            board[6] == 'O' && board[7] == 'O' && board[8] == 'O' ||
-            board[0] == 'O' && board[3] == 'O' && board[6] == 'O' ||
-            board[1] == 'O' && board[4] == 'O' && board[7] == 'O' ||
-            board[2] == 'O' && board[5] == 'O' && board[8] == 'O' ||
-            board[0] == 'O' && board[4] == 'O' && board[8] == 'O' ||
-            board[2] == 'O' && board[4] == 'O' && board[6] == 'O'
-        ){
-            return 'O';
-        } else if(board.indexOf('') >= 0){
-            return false;
-        } else{
-            return 'Tie';
+    const _determineWinner = (player) => {
+        let winner;
+        let winningCombo;
+        for (let i = 0; i < victoryCombs.length; i++) {
+            const combo = victoryCombs[i];
+            if(board[combo[0]] == player && board[combo[1]] == player && board[combo[2]] == player){
+                winner = player;
+                winningCombo = victoryCombs[i];
+                break;
+            } else if(board.indexOf('') >= 0){
+                winner = false;
+            } else{
+                winner = 'Tie';
+            }
         }
-    }   
+        return {
+            winner,
+            winningCombo
+        };
+    }
     const getCurrent = () => {
         return current;
     }
@@ -66,6 +77,7 @@ const gameBoard = (function(){
         modifyBoard,
         getCurrent,
         getBoard,
+        resetData
     }
     
 })();
@@ -102,6 +114,7 @@ const gameModule = (function(){
 const displayController = (function(){
     const squares = document.querySelectorAll('.board-square');
     const turnDisplay = document.getElementById('turn-display');
+    const winnerDisplay = document.getElementById('winner-display');
     const nameForm = document.getElementById('name-form');
     const boardElement = document.getElementById('board');
     const turnElement = document.getElementById('turn');
@@ -125,11 +138,16 @@ const displayController = (function(){
         render();
     }
     const _replayGame = () => {
-        location.reload();
+        gameBoard.resetData();
+        _bindEvents();
+        highlightSquares(false);
+        viewBoard();
+        render();
+        //location.reload();
     }
 
     const render = () => {
-        gameBoard.getBoard()    .forEach((item, index) => {
+        gameBoard.getBoard().forEach((item, index) => {
             squares[index].innerHTML = item;
         });
         turnDisplay.innerHTML = `${gameModule.findPlayer(gameBoard.getCurrent()).name}'s turn`;
@@ -140,6 +158,7 @@ const displayController = (function(){
         turnElement.style.display = 'block';
         turnDisplay.style.display = 'block';
         replayBtn.style.display = 'block';
+        winnerDisplay.style.display = 'none';
     }
     const getNames = () => {
         return {
@@ -147,9 +166,23 @@ const displayController = (function(){
             playerO: document.getElementById('o-name').value || 'O'
         }
     }
-    const endGame = (message) => {
+    const endGame = (message, combo) => {
         _removeEvents();
-        turnElement.innerHTML = message;
+        highlightSquares(combo);
+        turnDisplay.style.display = 'none';
+        winnerDisplay.style.display = 'block';
+        winnerDisplay.innerHTML = message;
+    }
+    const highlightSquares = (array) => {
+        if(!array){
+            gameBoard.getBoard().forEach((item, index) => {
+                document.getElementById(index).style.background = '#F4F4F4';
+            });
+            return;
+        }
+        array.forEach((square) => {
+            document.getElementById(square).style.background = 'rgba(0, 50, 100, 0.2)';
+        });
     }
 
     _bindEvents();
